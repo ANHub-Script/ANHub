@@ -18,7 +18,7 @@ R='\033[0m'
 
 if [ "$MODE" = "dev" ]; then
     INPUT=${2:-"./main.lua"}
-    PREFIX="${D}[ DEV ]${R}"
+    PREFIX="${D}[ BUILD ]${R}"
 else
     INPUT="src/Init.lua"
     PREFIX="${B}[ BUILD ]${R}"

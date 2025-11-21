@@ -15,7 +15,7 @@ do
     if ok then
         AnUI = result
     else 
-        AnUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/ANHub-Script/refs/heads/main/dist/main.lua"))()
+        AnUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/ANHub-Script/ANHub/refs/heads/main/dist/main.lua"))()
     end
 end
 

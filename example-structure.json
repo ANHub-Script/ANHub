@@ -76,7 +76,7 @@
         },
         "DisconnectAll": "function",
         "Drag": "function",
-        "Font": "rbxassetid://12187365364",
+        "Font": "rbxassetid://109266060342925",
         "FontObjects": [
             "userdata",
             "userdata",
@@ -2576,12 +2576,12 @@
                             "__type": "Button"
                         },
                         {
-                            "Desc": "github.com/ANHub-Script",
+                            "Desc": "github.com/ANHub-Script/ANHub",
                             "Destroy": "function",
                             "Locked": false,
                             "ParagraphFrame": {
                                 "Color": "Grey",
-                                "Desc": "github.com/ANHub-Script",
+                                "Desc": "github.com/ANHub-Script/ANHub",
                                 "Destroy": "function",
                                 "Hover": false,
                                 "IconThemed": false,

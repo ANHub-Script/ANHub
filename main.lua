@@ -149,7 +149,7 @@ local Window = AnUI:CreateWindow({
     -- KeySystem = { -- 
     --     -- Key = { "1234", "5678" },  
     --     Note = "Example Key System. With platoboost, etc.",
-    --     -- URL = "https://github.com/ANHub-Script",
+    --     -- URL = "https://github.com/ANHub-Script/ANHub",
     --     -- Thumbnail = {
     --     --     Image = "rbxassetid://",
     --     --     Title = "Thumbnail",
@@ -702,7 +702,7 @@ end
 local footerSection = Window:Section({ Title = "AnUI " .. AnUI.Version })
 Tabs.Config:Paragraph({
     Title = "Github Repository",
-    Desc = "github.com/ANHub-Script",
+    Desc = "github.com/ANHub-Script/ANHub",
     Image = "github",
     ImageSize = 20,
     Color = "Grey",
@@ -712,7 +712,7 @@ Tabs.Config:Paragraph({
             Icon = "copy",
             Variant = "Tertiary",
             Callback = function()
-                setclipboard("https://github.com/ANHub-Script")
+                setclipboard("https://github.com/ANHub-Script/ANHub")
                 AnUI:Notify({
                     Title = "Copied!",
                     Content = "GitHub link copied to clipboard",

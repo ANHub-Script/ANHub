@@ -1,18 +1,18 @@
--- Generated from package.json | build/build.sh
+-- Generated from package.json | build/build.js
 
 return [[
 {
     "name": "AnUI",
     "version": "1.6.62",
     "main": "./dist/main.lua",
-    "repository": "https://github.com/ANHub-Script",
+    "repository": "https://github.com/ANHub-Script/ANHub",
     "discord": "https://discord.gg/cy6uMRmeZ",
     "author": "AdityaNugraha",
     "description": "Roblox UI Library for scripts",
     "license": "MIT",
     "scripts": {
-        "dev": "bash build/build.sh dev $INPUT_FILE",
-        "build": "bash build/build.sh build $INPUT_FILE",
+        "build": "node build/build.js build",
+        "dev": "node build/build.js dev",
         "live": "python -m http.server 8642",
         "watch": "chokidar . -i 'node_modules' -i 'dist' -i 'build' -c 'npm run dev --'",
         "live-build": "concurrently \"npm run live\" \"npm run watch --\"",
@@ -30,4 +30,5 @@ return [[
         "chokidar-cli": "^3.0.0",
         "concurrently": "^9.2.0"
     }
-}]]
+}
+]]

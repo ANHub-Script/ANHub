@@ -8,5 +8,5 @@
 
 - [Example](/main_example.lua) (wip)
   ```luau
-  loadstring(game:HttpGet('https://raw.githubusercontent.com/ANHub-Script/refs/heads/main/main_example.lua'))()
+  loadstring(game:HttpGet('https://raw.githubusercontent.com/ANHub-Script/ANHub/refs/heads/main/main_example.lua'))()
   ```
