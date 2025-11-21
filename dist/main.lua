@@ -1537,7 +1537,7 @@ return[[
         "dev": "node build/build.js dev",
         "live": "python -m http.server 8642",
         "watch": "chokidar . -i 'node_modules' -i 'dist' -i 'build' -c 'npm run dev --'",
-        "live-build": "concurrently \"npm run live\" \"npm run watch --\"",
+        "live-build": "concurrently \"npm run live\" \"npm run build --\"",
         "example-live-build": "INPUT_FILE=main_example.lua npm run live-build",
         "updater": "python updater/main.py"
     },
@@ -9121,27 +9121,47 @@ VerticalAlignment="Bottom",
 })
 })
 
+local at=as.Content
 
-function ap.Tab(at,au)
+
+local function UpdateSectionSize()
+
+if ap.Opened and ap.Expandable then
+local au=at.AbsoluteSize.Y
+
+local av=(an and an.Scale)or 1
+
+
+ah(as,0.25,{
+Size=UDim2.new(1,0,0,ap.HeaderSize+(au/av))
+},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+end
+end
+
+
+
+at:GetPropertyChangedSignal"AbsoluteSize":Connect(UpdateSectionSize)
+
+function ap.Tab(au,av)
 if not ap.Expandable then
 ap.Expandable=true
 ar.Visible=true
 end
-au.Parent=as.Content
-return aj.New(au,an)
+av.Parent=as.Content
+return aj.New(av,an)
 end
 
-function ap.Open(at)
+function ap.Open(au)
 if ap.Expandable then
 ap.Opened=true
-ah(as,0.33,{
-Size=UDim2.new(1,0,0,ap.HeaderSize+(as.Content.AbsoluteSize.Y/an))
-},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+
+UpdateSectionSize()
 
 ah(ar.ImageLabel,0.1,{Rotation=180},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
 end
-function ap.Close(at)
+
+function ap.Close(au)
 if ap.Expandable then
 ap.Opened=false
 ah(as,0.26,{
