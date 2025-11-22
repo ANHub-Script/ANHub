@@ -1,5 +1,5 @@
 --[[
-    v1.6.62  |  2025-11-21  |  Roblox UI Library for scripts
+    v1.6.62  |  2025-11-22  |  Roblox UI Library for scripts
     
     To view the source code, see the `src/` folder on the official GitHub repository.
     
@@ -9190,9 +9190,11 @@ end
 
 
 
+
+ap.Update=UpdateSectionSize
+
 return ap
 end
-
 
 return aa end function a.V()
 return{
