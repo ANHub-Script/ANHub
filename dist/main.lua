@@ -6775,6 +6775,9 @@ AllowNone=an.AllowNone,
 SearchBarEnabled=an.SearchBarEnabled or false,
 Multi=an.Multi,
 Callback=an.Callback or nil,
+Images=an.Images or{},
+ImageSize=an.ImageSize or UDim2.new(0,30,0,30),
+ImagePadding=an.ImagePadding or 5,
 
 UIElements={},
 
@@ -6802,6 +6805,46 @@ Window=an.Window,
 ElementTable=ao,
 }
 
+
+if#ao.Images>0 then
+local aq=af("Frame",{
+BackgroundTransparency=1,
+Size=UDim2.new(1,0,0,ao.ImageSize.Y.Offset+10),
+Position=UDim2.new(0,0,1,5),
+Parent=ao.DropdownFrame.UIElements.Main,
+ClipsDescendants=true,
+},{
+af("UIListLayout",{
+FillDirection="Horizontal",
+Padding=UDim.new(0,ao.ImagePadding),
+VerticalAlignment="Top",
+}),
+af("UIPadding",{
+PaddingLeft=UDim.new(0,12),
+PaddingRight=UDim.new(0,12),
+PaddingTop=UDim.new(0,5),
+}),
+})
+
+ao.UIElements.ImagesContainer=aq
+
+for ar,as in ipairs(ao.Images)do
+af("ImageLabel",{
+Image=as.Image or as,
+Size=ao.ImageSize,
+BackgroundTransparency=1,
+ScaleType="Fit",
+Parent=aq,
+ThemeTag={
+ImageColor3=as.Color3 or"Text"
+}
+},{
+af("UICorner",{
+CornerRadius=UDim.new(0,6)
+})
+})
+end
+end
 
 if ao.Callback then
 ao.UIElements.Dropdown=ah("",nil,ao.DropdownFrame.UIElements.Main,nil,an.Window.NewElements and 12 or 10)
@@ -9121,47 +9164,27 @@ VerticalAlignment="Bottom",
 })
 })
 
-local at=as.Content
 
-
-local function UpdateSectionSize()
-
-if ap.Opened and ap.Expandable then
-local au=at.AbsoluteSize.Y
-
-local av=(an and an.Scale)or 1
-
-
-ah(as,0.25,{
-Size=UDim2.new(1,0,0,ap.HeaderSize+(au/av))
-},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-end
-end
-
-
-
-at:GetPropertyChangedSignal"AbsoluteSize":Connect(UpdateSectionSize)
-
-function ap.Tab(au,av)
+function ap.Tab(at,au)
 if not ap.Expandable then
 ap.Expandable=true
 ar.Visible=true
 end
-av.Parent=as.Content
-return aj.New(av,an)
+au.Parent=as.Content
+return aj.New(au,an)
 end
 
-function ap.Open(au)
+function ap.Open(at)
 if ap.Expandable then
 ap.Opened=true
-
-UpdateSectionSize()
+ah(as,0.33,{
+Size=UDim2.new(1,0,0,ap.HeaderSize+(as.Content.AbsoluteSize.Y/an))
+},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 
 ah(ar.ImageLabel,0.1,{Rotation=180},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
 end
-
-function ap.Close(au)
+function ap.Close(at)
 if ap.Expandable then
 ap.Opened=false
 ah(as,0.26,{
@@ -9190,11 +9213,9 @@ end
 
 
 
-
-ap.Update=UpdateSectionSize
-
 return ap
 end
+
 
 return aa end function a.V()
 return{
