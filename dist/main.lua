@@ -6086,33 +6086,6 @@ return aj.__type,aj
 end
 
 return ae end function a.I()
-local aa=a.load'b'
-local ac=aa.New
-
-local ae={}
-
-function ae.New(af,ag)
-local ah=ac("Frame",{
-Size=UDim2.new(1,0,0,1),
-Position=UDim2.new(0.5,0,0.5,0),
-AnchorPoint=Vector2.new(0.5,0.5),
-BackgroundTransparency=.9,
-ThemeTag={
-BackgroundColor3="Text"
-}
-})
-local ai=ac("Frame",{
-Parent=ag.Parent,
-Size=UDim2.new(1,-7,0,7),
-BackgroundTransparency=1,
-},{
-ah
-})
-
-return"Divider",{__type="Divider",ElementFrame=ai}
-end
-
-return ae end function a.J()
 local aa={}
 
 local ac=(cloneref or clonereference or function(ac)return ac end)
@@ -6450,11 +6423,11 @@ ak("UIListLayout",{
 Padding=UDim.new(0,2),
 SortOrder="LayoutOrder",
 }),
-aj.CreateLabel(aw.Name,Enum.Font.BuilderSans,am.Window.NewElements and 14 or 12,{
+CreateLabel(aw.Name,Enum.Font.BuilderSans,am.Window.NewElements and 14 or 12,{
 LayoutOrder=1,
 TextXAlignment="Left",
 }),
-aj.CreateLabel(aw.Desc,Enum.Font.BuilderSans,am.Window.NewElements and 12 or 10,{
+CreateLabel(aw.Desc,Enum.Font.BuilderSans,am.Window.NewElements and 12 or 10,{
 LayoutOrder=2,
 TextXAlignment="Left",
 ThemeTag={
@@ -6503,7 +6476,6 @@ end
 end
 end
 end local az=
-
 aw.UIElements.TabImage or(aw.UIElements.TabIcon and aw.UIElements.TabIcon.ImageLabel)
 
 if aw.Locked then
@@ -6624,8 +6596,18 @@ end
 
 RecalculateCanvasSize()
 RecalculateListSize()
-else a.load'I'
-:New{Parent=an.UIElements.Menu.Frame.ScrollingFrame}
+else
+ak("Frame",{
+Size=UDim2.new(1,0,0,1),
+BackgroundTransparency=.9,
+ThemeTag={BackgroundColor3="Text"},
+Parent=an.UIElements.UIListLayout
+},{
+ak("UIPadding",{
+PaddingLeft=UDim.new(0,ao.MenuPadding),
+PaddingRight=UDim.new(0,ao.MenuPadding),
+})
+})
 end
 end
 
@@ -6751,7 +6733,7 @@ UpdatePosition
 return ar
 end
 
-return aa end function a.K()
+return aa end function a.J()
 
 local aa=(cloneref or clonereference or function(aa)return aa end)
 
@@ -6765,7 +6747,7 @@ ae.Tween
 
 local ah=a.load't'.New local ai=a.load'k'
 .New
-local aj=a.load'J'.New local ak=
+local aj=a.load'I'.New local ak=
 
 workspace.CurrentCamera
 
@@ -6936,7 +6918,7 @@ end
 return ao.__type,ao
 end
 
-return al end function a.L()
+return al end function a.K()
 
 
 
@@ -7108,14 +7090,14 @@ end
 return table.concat(ar)
 end
 
-return aa end function a.M()
+return aa end function a.L()
 local aa={}
 
 local ae=a.load'b'
 local af=ae.New
 local ah=ae.Tween
 
-local aj=a.load'L'
+local aj=a.load'K'
 
 function aa.New(ak,al,am,an,ao)
 local ap={
@@ -7318,12 +7300,12 @@ return ap
 end
 
 
-return aa end function a.N()
+return aa end function a.M()
 local aa=a.load'b'local ae=
 aa.New
 
 
-local af=a.load'M'
+local af=a.load'L'
 
 local ah={}
 
@@ -7381,7 +7363,7 @@ al.ElementFrame=an.CodeFrame
 return al.__type,al
 end
 
-return ah end function a.O()
+return ah end function a.N()
 local aa=a.load'b'
 local ae=aa.New local af=
 aa.Tween
@@ -8098,7 +8080,7 @@ end)
 return au.__type,au
 end
 
-return ar end function a.P()
+return ar end function a.O()
 local aa=a.load'b'
 local ae=aa.New
 local af=aa.Tween
@@ -8351,7 +8333,34 @@ end)
 return al.__type,al
 end
 
-return ah end function a.Q()
+return ah end function a.P()
+local aa=a.load'b'
+local ae=aa.New
+
+local af={}
+
+function af.New(ah,aj)
+local ak=ae("Frame",{
+Size=UDim2.new(1,0,0,1),
+Position=UDim2.new(0.5,0,0.5,0),
+AnchorPoint=Vector2.new(0.5,0.5),
+BackgroundTransparency=.9,
+ThemeTag={
+BackgroundColor3="Text"
+}
+})
+local al=ae("Frame",{
+Parent=aj.Parent,
+Size=UDim2.new(1,-7,0,7),
+BackgroundTransparency=1,
+},{
+ak
+})
+
+return"Divider",{__type="Divider",ElementFrame=al}
+end
+
+return af end function a.Q()
 local aa=a.load'b'
 local ae=aa.New
 
@@ -8443,11 +8452,11 @@ Toggle=a.load'E',
 Slider=a.load'F',
 Keybind=a.load'G',
 Input=a.load'H',
-Dropdown=a.load'K',
-Code=a.load'N',
-Colorpicker=a.load'O',
-Section=a.load'P',
-Divider=a.load'I',
+Dropdown=a.load'J',
+Code=a.load'M',
+Colorpicker=a.load'N',
+Section=a.load'O',
+Divider=a.load'P',
 Space=a.load'Q',
 Image=a.load'R',
 
