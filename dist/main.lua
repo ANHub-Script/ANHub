@@ -6308,12 +6308,14 @@ break
 end
 end
 
+local az=aw.UIElements.TabImage or(aw.UIElements.TabIcon and aw.UIElements.TabIcon.ImageLabel)
+
 if ay then
 al(aw.UIElements.TabItem,0.1,{ImageTransparency=1}):Play()
 al(aw.UIElements.TabItem.Highlight,0.1,{ImageTransparency=1}):Play()
 al(aw.UIElements.TabItem.Frame.Title.TextLabel,0.1,{TextTransparency=0.6}):Play()
-if aw.UIElements.TabIcon then
-al(aw.UIElements.TabIcon.ImageLabel,0.1,{ImageTransparency=0.6}):Play()
+if az then
+al(az,0.1,{ImageTransparency=0.6}):Play()
 end
 
 aw.UIElements.TabItem.Active=false
@@ -6323,15 +6325,15 @@ if aw.Selected then
 al(aw.UIElements.TabItem,0.1,{ImageTransparency=0.95}):Play()
 al(aw.UIElements.TabItem.Highlight,0.1,{ImageTransparency=0.75}):Play()
 al(aw.UIElements.TabItem.Frame.Title.TextLabel,0.1,{TextTransparency=0}):Play()
-if aw.UIElements.TabIcon then
-al(aw.UIElements.TabIcon.ImageLabel,0.1,{ImageTransparency=0}):Play()
+if az then
+al(az,0.1,{ImageTransparency=0}):Play()
 end
 else
 al(aw.UIElements.TabItem,0.1,{ImageTransparency=1}):Play()
 al(aw.UIElements.TabItem.Highlight,0.1,{ImageTransparency=1}):Play()
 al(aw.UIElements.TabItem.Frame.Title.TextLabel,0.1,{TextTransparency=aq=="Dropdown"and 0.4 or 0.05}):Play()
-if aw.UIElements.TabIcon then
-al(aw.UIElements.TabIcon.ImageLabel,0.1,{ImageTransparency=aq=="Dropdown"and 0.2 or 0}):Play()
+if az then
+al(az,0.1,{ImageTransparency=aq=="Dropdown"and 0.2 or 0}):Play()
 end
 end
 
@@ -6376,14 +6378,24 @@ local ax={
 Name=typeof(aw)=="table"and aw.Title or aw,
 Desc=typeof(aw)=="table"and aw.Desc or nil,
 Icon=typeof(aw)=="table"and aw.Icon or nil,
+Image=typeof(aw)=="table"and aw.Image or nil,
 Original=aw,
 Selected=false,
 Locked=typeof(aw)=="table"and aw.Locked or false,
 UIElements={},
 }
 local ay
-if ax.Icon then
-ay=aj.Image(
+if ax.Image then
+ay=ak("ImageLabel",{
+Image=ax.Image,
+Size=UDim2.new(0,ao.TabIcon,0,ao.TabIcon),
+BackgroundTransparency=1,
+ScaleType="Fit",
+ImageTransparency=aq=="Dropdown"and.2 or 0,
+},{ak("UICorner",{CornerRadius=UDim.new(0,4)})})
+ax.UIElements.TabImage=ay
+elseif ax.Icon then
+local az=aj.Image(
 ax.Icon,
 ax.Icon,
 0,
@@ -6391,9 +6403,10 @@ am.Window.Folder,
 "Dropdown",
 true
 )
-ay.Size=UDim2.new(0,ao.TabIcon,0,ao.TabIcon)
-ay.ImageLabel.ImageTransparency=aq=="Dropdown"and.2 or 0
-ax.UIElements.TabIcon=ay
+az.Size=UDim2.new(0,ao.TabIcon,0,ao.TabIcon)
+az.ImageLabel.ImageTransparency=aq=="Dropdown"and.2 or 0
+ax.UIElements.TabIcon=az
+ay=az
 end
 ax.UIElements.TabItem=aj.NewRoundFrame(ao.MenuCorner-ao.MenuPadding,"Squircle",{
 Size=UDim2.new(1,0,0,36),
@@ -6489,46 +6502,48 @@ FillDirection="Vertical",
 })
 },true)
 
+local az=ax.UIElements.TabImage or(ax.UIElements.TabIcon and ax.UIElements.TabIcon.ImageLabel)
+
 if ax.Locked then
 ax.UIElements.TabItem.Frame.Title.TextLabel.TextTransparency=0.6
-if ax.UIElements.TabIcon then
-ax.UIElements.TabIcon.ImageLabel.ImageTransparency=0.6
+if az then
+az.ImageTransparency=0.6
 end
 end
 
 if an.Multi and typeof(an.Value)=="string"then
-for az,aA in next,an.Values do
-if typeof(aA)=="table"then
-if aA.Title==an.Value then an.Value={aA}end
+for aA,aB in next,an.Values do
+if typeof(aB)=="table"then
+if aB.Title==an.Value then an.Value={aB}end
 else
-if aA==an.Value then an.Value={an.Value}end
+if aB==an.Value then an.Value={an.Value}end
 end
 end
 end
 
 if an.Multi then
-local az=false
+local aA=false
 if typeof(an.Value)=="table"then
-for aA,aB in ipairs(an.Value)do
-local b=typeof(aB)=="table"and aB.Title or aB
-if b==ax.Name then
-az=true
+for aB,b in ipairs(an.Value)do
+local d=typeof(b)=="table"and b.Title or b
+if d==ax.Name then
+aA=true
 break
 end
 end
 end
-ax.Selected=az
+ax.Selected=aA
 else
-local az=typeof(an.Value)=="table"and an.Value.Title or an.Value
-ax.Selected=az==ax.Name
+local aA=typeof(an.Value)=="table"and an.Value.Title or an.Value
+ax.Selected=aA==ax.Name
 end
 
 if ax.Selected and not ax.Locked then
 ax.UIElements.TabItem.ImageTransparency=.95
 ax.UIElements.TabItem.Highlight.ImageTransparency=.75
 ax.UIElements.TabItem.Frame.Title.TextLabel.TextTransparency=0
-if ax.UIElements.TabIcon then
-ax.UIElements.TabIcon.ImageLabel.ImageTransparency=0
+if az then
+az.ImageTransparency=0
 end
 end
 
@@ -6540,14 +6555,16 @@ if aq=="Dropdown"then
 aj.AddSignal(ax.UIElements.TabItem.MouseButton1Click,function()
 if ax.Locked then return end
 
+local aA=ax.UIElements.TabImage or(ax.UIElements.TabIcon and ax.UIElements.TabIcon.ImageLabel)
+
 if an.Multi then
 if not ax.Selected then
 ax.Selected=true
 al(ax.UIElements.TabItem,0.1,{ImageTransparency=.95}):Play()
 al(ax.UIElements.TabItem.Highlight,0.1,{ImageTransparency=.75}):Play()
 al(ax.UIElements.TabItem.Frame.Title.TextLabel,0.1,{TextTransparency=0}):Play()
-if ax.UIElements.TabIcon then
-al(ax.UIElements.TabIcon.ImageLabel,0.1,{ImageTransparency=0}):Play()
+if aA then
+al(aA,0.1,{ImageTransparency=0}):Play()
 end
 table.insert(an.Value,ax.Original)
 else
@@ -6558,33 +6575,34 @@ ax.Selected=false
 al(ax.UIElements.TabItem,0.1,{ImageTransparency=1}):Play()
 al(ax.UIElements.TabItem.Highlight,0.1,{ImageTransparency=1}):Play()
 al(ax.UIElements.TabItem.Frame.Title.TextLabel,0.1,{TextTransparency=.4}):Play()
-if ax.UIElements.TabIcon then
-al(ax.UIElements.TabIcon.ImageLabel,0.1,{ImageTransparency=.2}):Play()
+if aA then
+al(aA,0.1,{ImageTransparency=.2}):Play()
 end
 
-for az,aA in next,an.Value do
-if typeof(aA)=="table"and(aA.Title==ax.Name)or(aA==ax.Name)then
-table.remove(an.Value,az)
+for aB,b in next,an.Value do
+if typeof(b)=="table"and(b.Title==ax.Name)or(b==ax.Name)then
+table.remove(an.Value,aB)
 break
 end
 end
 end
 else
-for az,aA in next,an.Tabs do
-al(aA.UIElements.TabItem,0.1,{ImageTransparency=1}):Play()
-al(aA.UIElements.TabItem.Highlight,0.1,{ImageTransparency=1}):Play()
-al(aA.UIElements.TabItem.Frame.Title.TextLabel,0.1,{TextTransparency=.4}):Play()
-if aA.UIElements.TabIcon then
-al(aA.UIElements.TabIcon.ImageLabel,0.1,{ImageTransparency=.2}):Play()
+for aB,b in next,an.Tabs do
+local d=b.UIElements.TabImage or(b.UIElements.TabIcon and b.UIElements.TabIcon.ImageLabel)
+al(b.UIElements.TabItem,0.1,{ImageTransparency=1}):Play()
+al(b.UIElements.TabItem.Highlight,0.1,{ImageTransparency=1}):Play()
+al(b.UIElements.TabItem.Frame.Title.TextLabel,0.1,{TextTransparency=.4}):Play()
+if d then
+al(d,0.1,{ImageTransparency=.2}):Play()
 end
-aA.Selected=false
+b.Selected=false
 end
 ax.Selected=true
 al(ax.UIElements.TabItem,0.1,{ImageTransparency=.95}):Play()
 al(ax.UIElements.TabItem.Highlight,0.1,{ImageTransparency=.75}):Play()
 al(ax.UIElements.TabItem.Frame.Title.TextLabel,0.1,{TextTransparency=0}):Play()
-if ax.UIElements.TabIcon then
-al(ax.UIElements.TabIcon.ImageLabel,0.1,{ImageTransparency=0}):Play()
+if aA then
+al(aA,0.1,{ImageTransparency=0}):Play()
 end
 an.Value=ax.Original
 end
