@@ -1,43 +1,52 @@
-local Section = {}
-
-
-local Creator = require("../../modules/Creator")
+local Creator = require("../modules/Creator")
 local New = Creator.New
 local Tween = Creator.Tween
 
-local TabModule = require("./Tab")
+local Element = {}
 
-function Section.New(SectionConfig, Parent, Folder, UIScale, Window)
-    local SectionModule = {
-        Title = SectionConfig.Title or "Section",
-        Icon = SectionConfig.Icon,
-        IconThemed = SectionConfig.IconThemed,
-        Opened = SectionConfig.Opened or false,
+function Element:New(Config)
+    local Section = {
+        __type = "Section",
+        Title = Config.Title or "Section",
+        Icon = Config.Icon,
+        TextXAlignment = Config.TextXAlignment or "Left",
+        TextSize = Config.TextSize or 19,
+        Box = Config.Box or false,
+        FontWeight = Config.FontWeight or Enum.FontWeight.SemiBold,
+        TextTransparency = Config.TextTransparency or 0.05,
+        Opened = Config.Opened or false,
+        UIElements = {},
         
         HeaderSize = 42,
-        IconSize = 18,
+        IconSize = 20,
+        Padding = 10,
+        
+        Elements = {},
         
         Expandable = false,
     }
     
-    local IconFrame
-    if SectionModule.Icon then
-        IconFrame = Creator.Image(
-            SectionModule.Icon,
-            SectionModule.Icon,
-            0,
-            Folder,
-            "Section",
-            true,
-            SectionModule.IconThemed
-        )
-        
-        IconFrame.Size = UDim2.new(0,SectionModule.IconSize,0,SectionModule.IconSize)
-        IconFrame.ImageLabel.ImageTransparency = .25
+    local Icon
+
+    
+    function Section:SetIcon(i)
+        Section.Icon = i or nil
+        if Icon then Icon:Destroy() end
+        if i then
+            Icon = Creator.Image(
+                i,
+                i .. ":" .. Section.Title,
+                0,
+                Config.Window.Folder,
+                Section.__type,
+                true
+            )
+            Icon.Size = UDim2.new(0,Section.IconSize,0,Section.IconSize)
+        end
     end
     
     local ChevronIconFrame = New("Frame", {
-        Size = UDim2.new(0,SectionModule.IconSize,0,SectionModule.IconSize),
+        Size = UDim2.new(0,Section.IconSize,0,Section.IconSize),
         BackgroundTransparency = 1,
         Visible = false
     }, {
@@ -54,117 +63,191 @@ function Section.New(SectionConfig, Parent, Folder, UIScale, Window)
         })
     })
     
-    local SectionFrame = New("Frame", {
-        Size = UDim2.new(1,0,0,SectionModule.HeaderSize),
+    
+    if Section.Icon then
+        Section:SetIcon(Section.Icon)
+    end
+    
+    local TitleFrame = New("TextLabel", {
         BackgroundTransparency = 1,
-        Parent = Parent,
+        TextXAlignment = Section.TextXAlignment,
+        AutomaticSize = "Y",
+        TextSize = Section.TextSize,
+        TextTransparency = Section.TextTransparency,
+        ThemeTag = {
+            TextColor3 = "Text",
+        },
+        FontFace = Font.new(Creator.Font, Section.FontWeight),
+        --Parent = Config.Parent,
+        --Size = UDim2.new(1,0,0,0),
+        Text = Section.Title,
+        Size = UDim2.new(
+            1, 
+            0,
+            0,
+            0
+        ),
+        TextWrapped = true,
+    })
+
+    
+    local function UpdateTitleSize()
+        local offset = 0
+        if Icon then
+            offset = offset - (Section.IconSize + 8)
+        end
+        if ChevronIconFrame.Visible then
+            offset = offset - (Section.IconSize + 8)
+        end
+        TitleFrame.Size = UDim2.new(1, offset, 0, 0)
+    end
+    
+    
+    local Main = Creator.NewRoundFrame(Config.Window.ElementConfig.UICorner, "Squircle", {
+        Size = UDim2.new(1,0,0,0),
+        BackgroundTransparency = 1,
+        Parent = Config.Parent,
         ClipsDescendants = true,
+        AutomaticSize = "Y",
+        ImageTransparency = Section.Box and .93 or 1,
+        ThemeTag = {
+            ImageColor3 = "Text",
+        },
     }, {
         New("TextButton", {
-            Size = UDim2.new(1,0,0,SectionModule.HeaderSize),
+            Size = UDim2.new(1,0,0,Expandable and 0 or Section.HeaderSize),
             BackgroundTransparency = 1,
+            AutomaticSize = Expandable and nil or "Y" ,
             Text = "",
+            Name = "Top",
         }, {
-            IconFrame,
-            New("TextLabel", {
-                Text = SectionModule.Title,
-                TextXAlignment = "Left",
-                Size = UDim2.new(
-                    1, 
-                    IconFrame and (-SectionModule.IconSize-10)*2
-                        or (-SectionModule.IconSize-10),
-                        
-                    1,
-                    0
-                ),
-                ThemeTag = {
-                    TextColor3 = "Text",
-                },
-                FontFace = Font.new(Creator.Font, Enum.FontWeight.SemiBold),
-                TextSize = 14,
-                BackgroundTransparency = 1,
-                TextTransparency = .7,
-                --TextTruncate = "AtEnd",
-                TextWrapped = true
-            }),
+            Section.Box and New("UIPadding", {
+                PaddingLeft = UDim.new(0,Config.Window.ElementConfig.UIPadding),
+                PaddingRight = UDim.new(0,Config.Window.ElementConfig.UIPadding),
+            }) or nil,
+            Icon,
+            TitleFrame,
             New("UIListLayout", {
+                Padding = UDim.new(0,8),
                 FillDirection = "Horizontal",
                 VerticalAlignment = "Center",
-                Padding = UDim.new(0,10)
+                HorizontalAlignment = "Left",
             }),
             ChevronIconFrame,
-            New("UIPadding", {
-                PaddingLeft = UDim.new(0,11),
-                PaddingRight = UDim.new(0,11),
-            })
         }),
         New("Frame", {
             BackgroundTransparency = 1,
             Size = UDim2.new(1,0,0,0),
             AutomaticSize = "Y",
             Name = "Content",
-            Visible = true,
-            Position = UDim2.new(0,0,0,SectionModule.HeaderSize)
+            Visible = false,
+            Position = UDim2.new(0,0,0,Section.HeaderSize)
         }, {
+            Section.Box and New("UIPadding", {
+                PaddingLeft = UDim.new(0,Config.Window.ElementConfig.UIPadding),
+                PaddingRight = UDim.new(0,Config.Window.ElementConfig.UIPadding),
+                PaddingBottom = UDim.new(0,Config.Window.ElementConfig.UIPadding),
+            }) or nil,
             New("UIListLayout", {
                 FillDirection = "Vertical",
-                Padding = UDim.new(0,Window.Gap),
-                VerticalAlignment = "Bottom",
+                Padding = UDim.new(0,Config.Tab.Gap),
+                VerticalAlignment = "Top",
             }),
         })
     })
+
+    -- Section.UIElements.Main:GetPropertyChangedSignal("TextBounds"):Connect(function()
+    --     Section.UIElements.Main.Size = UDim2.new(1,0,0,Section.UIElements.Main.TextBounds.Y)
+    -- end)
     
     
-    function SectionModule:Tab(TabConfig)
-        if not SectionModule.Expandable then
-            SectionModule.Expandable = true
+    
+    local ElementsModule = Config.ElementsModule
+    
+    ElementsModule.Load(Section, Main.Content, ElementsModule.Elements, Config.Window, Config.WindUI, function()
+        if not Section.Expandable then
+            Section.Expandable = true
             ChevronIconFrame.Visible = true
+            UpdateTitleSize()
         end
-        TabConfig.Parent = SectionFrame.Content
-        return TabModule.New(TabConfig, UIScale)
+    end, ElementsModule, Config.UIScale, Config.Tab)
+    
+    
+    UpdateTitleSize()
+    
+    function Section:SetTitle(Title)
+        TitleFrame.Text = Title
     end
     
-    function SectionModule:Open()
-        if SectionModule.Expandable then
-            SectionModule.Opened = true
-            Tween(SectionFrame, 0.33, {
-                Size = UDim2.new(1,0,0, SectionModule.HeaderSize + (SectionFrame.Content.AbsoluteSize.Y/UIScale))
+    function Section:Destroy()
+        for _,element in next, Section.Elements do
+            element:Destroy()
+        end
+        
+        -- Section.UIElements.Main.AutomaticSize = "None"
+        -- Section.UIElements.Main.Size = UDim2.new(1,0,0,Section.UIElements.Main.TextBounds.Y)
+        
+        -- Tween(Section.UIElements.Main, .1, {TextTransparency = 1}):Play()
+        -- task.wait(.1)
+        -- Tween(Section.UIElements.Main, .15, {Size = UDim2.new(1,0,0,0)}, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut):Play()
+        
+        Main:Destroy()
+    end
+    
+    function Section:Open()
+        if Section.Expandable then
+            Section.Opened = true
+            Tween(Main, 0.33, {
+                Size = UDim2.new(1,0,0, Section.HeaderSize + (Main.Content.AbsoluteSize.Y/Config.UIScale))
             }, Enum.EasingStyle.Quint, Enum.EasingDirection.Out):Play()
             
             Tween(ChevronIconFrame.ImageLabel, 0.1, {Rotation = 180}, Enum.EasingStyle.Quint, Enum.EasingDirection.Out):Play()
         end
     end
-    function SectionModule:Close()
-        if SectionModule.Expandable then
-            SectionModule.Opened = false
-            Tween(SectionFrame, 0.26, {
-                Size = UDim2.new(1,0,0, SectionModule.HeaderSize)
+    function Section:Close()
+        if Section.Expandable then
+            Section.Opened = false
+            Tween(Main, 0.26, {
+                Size = UDim2.new(1,0,0, Section.HeaderSize)
             }, Enum.EasingStyle.Quint, Enum.EasingDirection.Out):Play()
             Tween(ChevronIconFrame.ImageLabel, 0.1, {Rotation = 0}, Enum.EasingStyle.Quint, Enum.EasingDirection.Out):Play()
         end
     end
     
-    Creator.AddSignal(SectionFrame.TextButton.MouseButton1Click, function()
-        if SectionModule.Expandable then
-            if SectionModule.Opened then
-                SectionModule:Close()
+    Creator.AddSignal(Main.Top.MouseButton1Click, function()
+        if Section.Expandable then
+            if Section.Opened then
+                Section:Close()
             else
-                SectionModule:Open()
+                Section:Open()
             end
         end
     end)
     
-    if SectionModule.Opened then
-        task.spawn(function()
-            task.wait()
-            SectionModule:Open()
-        end)
-    end
-
+    task.spawn(function()
+        task.wait(0.02)
+        if Section.Expandable then
+            -- New("UIPadding", {
+            --     PaddingTop = UDim.new(0,4),
+            --     PaddingLeft = UDim.new(0,Section.Padding),
+            --     PaddingRight = UDim.new(0,Section.Padding),
+            --     PaddingBottom = UDim.new(0,2),
+                
+            --     Parent = Main.Top,
+            -- })
+            Main.Size = UDim2.new(1,0,0,Section.HeaderSize)
+            Main.AutomaticSize = "None"
+            Main.Top.Size = UDim2.new(1,0,0,Section.HeaderSize)
+            Main.Top.AutomaticSize = "None"
+            Main.Content.Visible = true
+        end
+        if Section.Opened then
+            Section:Open()
+        end
+        
+    end)
     
-    
-    return SectionModule
+    return Section.__type, Section
 end
 
-
-return Section
+return Element
