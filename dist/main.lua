@@ -6376,11 +6376,13 @@ local ax={
 Name=typeof(aw)=="table"and aw.Title or aw,
 Desc=typeof(aw)=="table"and aw.Desc or nil,
 Icon=typeof(aw)=="table"and aw.Icon or nil,
-CImage=typeof(aw)=="table"and aw.CImage or nil,
 Original=aw,
 Selected=false,
 Locked=typeof(aw)=="table"and aw.Locked or false,
 UIElements={},
+Images=typeof(aw)=="table"and aw.Images or nil,
+ImageSize=typeof(aw)=="table"and(aw.ImageSize or UDim2.new(0,30,0,30))or nil,
+ImagePadding=typeof(aw)=="table"and(aw.ImagePadding or 5)or nil,
 }
 local ay
 if ax.Icon then
@@ -6396,53 +6398,9 @@ ay.Size=UDim2.new(0,ao.TabIcon,0,ao.TabIcon)
 ay.ImageLabel.ImageTransparency=aq=="Dropdown"and.2 or 0
 ax.UIElements.TabIcon=ay
 end
-
-local az
-if ax.CImage and#ax.CImage>0 then
-az=ak("Frame",{
-Name="CImageContainer",
-BackgroundTransparency=1,
-AutomaticSize="XY",
-LayoutOrder=1000,
-},{
-ak("UIListLayout",{
-FillDirection="Horizontal",
-SortOrder="LayoutOrder",
-Padding=UDim.new(0,5),
-}),
-ak("UIPadding",{
-PaddingTop=UDim.new(0,5)
-})
-})
-
-for aA,aB in ipairs(ax.CImage)do
-local b=typeof(aB)=="table"and aB.Image or aB
-local d=typeof(aB)=="table"and aB.Color3 or nil
-local f=typeof(aB)=="table"and aB.Size or UDim2.new(0,30,0,30)
-
-local g=ak("ImageLabel",{
-Image=b,
-Size=f,
-BackgroundTransparency=1,
-ScaleType="Fit",
-Parent=az,
-})
-
-if d then
-g.ImageColor3=d
-end
-
-aj.ThemeApply(g,{
-ThemeTag={
-ImageColor3=not d and"Text"or nil
-}
-})
-end
-end
-
 ax.UIElements.TabItem=aj.NewRoundFrame(ao.MenuCorner-ao.MenuPadding,"Squircle",{
 Size=UDim2.new(1,0,0,36),
-AutomaticSize=(ax.Desc or(ax.CImage and#ax.CImage>0))and"Y"or nil,
+AutomaticSize=((ax.Desc)or(ax.Images and#ax.Images>0))and"Y"or nil,
 ImageTransparency=1,
 Parent=an.UIElements.Menu.Frame.ScrollingFrame,
 ImageColor3=Color3.new(1,1,1),
@@ -6526,7 +6484,6 @@ Size=UDim2.new(1,0,0,0),
 Visible=ax.Desc and true or false,
 Name="Desc",
 }),
-az,
 ak("UIListLayout",{
 Padding=UDim.new(0,ao.TabPadding/3),
 FillDirection="Vertical",
@@ -6534,6 +6491,48 @@ FillDirection="Vertical",
 })
 })
 },true)
+if ax.Images and#ax.Images>0 then
+local az=ak("Frame",{
+Name="ImagesContainer",
+BackgroundTransparency=1,
+Size=UDim2.new(1,0,0,(ax.ImageSize and ax.ImageSize.Y.Offset)or 30),
+AutomaticSize="Y",
+Parent=ax.UIElements.TabItem.Frame.Title,
+LayoutOrder=1000,
+},{
+ak("UIListLayout",{
+FillDirection="Horizontal",
+Padding=UDim.new(0,ax.ImagePadding or 5),
+VerticalAlignment="Top",
+}),
+ak("UIPadding",{
+PaddingTop=UDim.new(0,ao.TabPadding/3),
+}),
+})
+ax.UIElements.ImagesContainer=az
+for aA,aB in ipairs(ax.Images)do
+local b=typeof(aB)=="table"and aB.Image or aB
+local d=typeof(aB)=="table"and aB.Color3 or nil
+
+local f=ak("ImageLabel",{
+Image=b,
+Size=ax.ImageSize or UDim2.new(0,30,0,30),
+BackgroundTransparency=1,
+ScaleType="Fit",
+Parent=az,
+})
+
+if d then
+f.ImageColor3=d
+end
+
+aj.ThemeApply(f,{
+ThemeTag={
+ImageColor3=not d and"Text"or nil
+}
+})
+end
+end
 
 if ax.Locked then
 ax.UIElements.TabItem.Frame.Title.TextLabel.TextTransparency=0.6
@@ -6543,30 +6542,30 @@ end
 end
 
 if an.Multi and typeof(an.Value)=="string"then
-for aA,aB in next,an.Values do
-if typeof(aB)=="table"then
-if aB.Title==an.Value then an.Value={aB}end
+for az,aA in next,an.Values do
+if typeof(aA)=="table"then
+if aA.Title==an.Value then an.Value={aA}end
 else
-if aB==an.Value then an.Value={an.Value}end
+if aA==an.Value then an.Value={an.Value}end
 end
 end
 end
 
 if an.Multi then
-local aA=false
+local az=false
 if typeof(an.Value)=="table"then
-for aB,b in ipairs(an.Value)do
-local d=typeof(b)=="table"and b.Title or b
-if d==ax.Name then
-aA=true
+for aA,aB in ipairs(an.Value)do
+local b=typeof(aB)=="table"and aB.Title or aB
+if b==ax.Name then
+az=true
 break
 end
 end
 end
-ax.Selected=aA
+ax.Selected=az
 else
-local aA=typeof(an.Value)=="table"and an.Value.Title or an.Value
-ax.Selected=aA==ax.Name
+local az=typeof(an.Value)=="table"and an.Value.Title or an.Value
+ax.Selected=az==ax.Name
 end
 
 if ax.Selected and not ax.Locked then
@@ -6608,22 +6607,22 @@ if ax.UIElements.TabIcon then
 al(ax.UIElements.TabIcon.ImageLabel,0.1,{ImageTransparency=.2}):Play()
 end
 
-for aA,aB in next,an.Value do
-if typeof(aB)=="table"and(aB.Title==ax.Name)or(aB==ax.Name)then
-table.remove(an.Value,aA)
+for az,aA in next,an.Value do
+if typeof(aA)=="table"and(aA.Title==ax.Name)or(aA==ax.Name)then
+table.remove(an.Value,az)
 break
 end
 end
 end
 else
-for aA,aB in next,an.Tabs do
-al(aB.UIElements.TabItem,0.1,{ImageTransparency=1}):Play()
-al(aB.UIElements.TabItem.Highlight,0.1,{ImageTransparency=1}):Play()
-al(aB.UIElements.TabItem.Frame.Title.TextLabel,0.1,{TextTransparency=.4}):Play()
-if aB.UIElements.TabIcon then
-al(aB.UIElements.TabIcon.ImageLabel,0.1,{ImageTransparency=.2}):Play()
+for az,aA in next,an.Tabs do
+al(aA.UIElements.TabItem,0.1,{ImageTransparency=1}):Play()
+al(aA.UIElements.TabItem.Highlight,0.1,{ImageTransparency=1}):Play()
+al(aA.UIElements.TabItem.Frame.Title.TextLabel,0.1,{TextTransparency=.4}):Play()
+if aA.UIElements.TabIcon then
+al(aA.UIElements.TabIcon.ImageLabel,0.1,{ImageTransparency=.2}):Play()
 end
-aB.Selected=false
+aA.Selected=false
 end
 ax.Selected=true
 al(ax.UIElements.TabItem,0.1,{ImageTransparency=.95}):Play()
